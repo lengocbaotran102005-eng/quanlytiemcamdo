@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="200" height="200">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2C1810"/>
+      <stop offset="100%" stop-color="#1a0f08"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="50%" stop-color="#FFA500"/>
+      <stop offset="100%" stop-color="#FFD700"/>
+    </linearGradient>
+    <linearGradient id="watch" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C0C0C0"/>
+      <stop offset="50%" stop-color="#E8E8E8"/>
+      <stop offset="100%" stop-color="#A0A0A0"/>
+    </linearGradient>
+    <linearGradient id="gem" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff4444"/>
+      <stop offset="100%" stop-color="#ff0000"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <circle cx="50" cy="50" r="50" fill="url(#bg)"/>
+  <circle cx="50" cy="50" r="46" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.6"/>
+
+  <!-- === ĐỒNG HỒ ĐEO TAY === -->
+  <!-- Dây đồng hồ trên -->
+  <rect x="38" y="15" width="8" height="10" rx="2" fill="url(#watch)"/>
+  <rect x="54" y="15" width="8" height="10" rx="2" fill="url(#watch)"/>
+  <!-- Thân đồng hồ -->
+  <rect x="32" y="24" width="36" height="32" rx="6" fill="url(#watch)"/>
+  <rect x="34" y="26" width="32" height="28" rx="5" fill="#1a1a2e"/>
+  <!-- Núm đồng hồ -->
+  <rect x="68" y="32" width="4" height="8" rx="2" fill="url(#watch)"/>
+  <!-- Mặt đồng hồ - số 12,3,6,9 -->
+  <circle cx="50" cy="40" r="12" fill="#0d1b2a" stroke="#FFD700" stroke-width="0.8"/>
+  <rect x="49.2" y="30" width="1.6" height="3" rx="0.8" fill="#FFD700"/>
+  <rect x="49.2" y="47" width="1.6" height="3" rx="0.8" fill="#FFD700"/>
+  <rect x="38" y="39.2" width="3" height="1.6" rx="0.8" fill="#FFD700"/>
+  <rect x="59" y="39.2" width="3" height="1.6" rx="0.8" fill="#FFD700"/>
+  <!-- Kim đồng hồ -->
+  <line x1="50" y1="40" x2="50" y2="33" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="50" y1="40" x2="55" y2="43" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="50" cy="40" r="1.2" fill="#FFD700"/>
+  <!-- Dây đồng hồ dưới -->
+  <rect x="38" y="56" width="8" height="10" rx="2" fill="url(#watch)"/>
+  <rect x="54" y="56" width="8" height="10" rx="2" fill="url(#watch)"/>
+
+  <!-- === NHẪN VÀNG === -->
+  <!-- Vòng nhẫn -->
+  <circle cx="50" cy="79" r="11" fill="none" stroke="url(#gold)" stroke-width="5"/>
+  <!-- Đá quý trên nhẫn -->
+  <polygon points="50,64 54,69 50,72 46,69" fill="url(#gem)"/>
+  <polygon points="50,64 54,69 50,67.5" fill="white" opacity="0.5"/>
+  <!-- Highlight nhẫn -->
+  <path d="M41,76 Q44,72 50,72" fill="none" stroke="#FFE55C" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+</svg>

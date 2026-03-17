@@ -1,0 +1,120 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Báo cáo | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900">Báo cáo doanh thu</h1>
+      <p class="text-sm text-slate-500">Tổng hợp doanh thu gốc và lãi theo tháng.</p>
+    </div>
+    <form method="get" class="flex items-center gap-2">
+      <label class="text-sm text-slate-600">Năm</label>
+      <input type="number" name="year" value="{{ year }}" class="w-24 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary">
+      <button type="submit" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">
+        Xem
+      </button>
+    </form>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-[2fr,1fr] mb-6">
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+      <h2 class="text-sm font-semibold text-slate-900 mb-3">Biểu đồ doanh thu theo tháng {{ year }}</h2>
+      <canvas id="revenueChart" class="w-full h-64"></canvas>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 text-sm">
+      <h2 class="text-sm font-semibold text-slate-900 mb-3">Tổng kết</h2>
+      {% set total_interest = monthly | map(attribute='interest') | sum %}
+      {% set total_principal = monthly | map(attribute='principal') | sum %}
+      <dl class="space-y-2">
+        <div class="flex justify-between">
+          <dt class="text-slate-500">Tổng tiền gốc đã thu (chuộc)</dt>
+          <dd class="font-semibold text-slate-900">{{ format_currency(total_principal) }}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-slate-500">Tổng tiền lãi đã thu</dt>
+          <dd class="font-semibold text-emerald-700">{{ format_currency(total_interest) }}</dd>
+        </div>
+        <div class="flex justify-between pt-2 border-t border-slate-100 mt-2">
+          <dt class="text-slate-500">Tổng doanh thu</dt>
+          <dd class="font-semibold text-primary">{{ format_currency(total_principal + total_interest) }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-xl shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Mã phiếu</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Khách hàng</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Số tiền</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Trạng thái</th>
+            <th class="px-4 py-2 text-right font-medium text-slate-500">Ngày cầm</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in transactions %}
+            <tr class="border-t border-slate-100 hover:bg-slate-50">
+              <td class="px-4 py-2 text-slate-800 font-medium">{{ t.ticket_no }}</td>
+              <td class="px-4 py-2 text-slate-700">{{ t.customer.full_name if t.customer else "-" }}</td>
+              <td class="px-4 py-2 text-slate-900">{{ format_currency(t.pawn_value) }}</td>
+              <td class="px-4 py-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ status_badge_class(t.status) }}">
+                  {{ status_label(t.status) }}
+                </span>
+              </td>
+              <td class="px-4 py-2 text-right text-slate-600">{{ format_date(t.pawn_date) }}</td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">
+                Chưa có dữ liệu để báo cáo.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById("revenueChart").getContext("2d");
+    const labels = {{ monthly | map(attribute='month') | list | tojson }};
+    const interestData = {{ monthly | map(attribute='interest') | list | tojson }};
+    const principalData = {{ monthly | map(attribute='principal') | list | tojson }};
+
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Lãi",
+            data: interestData,
+            backgroundColor: "rgba(22,163,74,0.7)"
+          },
+          {
+            label: "Gốc (chuộc)",
+            data: principalData,
+            backgroundColor: "rgba(30,64,175,0.7)"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,14 @@
+@startuml
+title BFD mức 0 – Hệ thống quản lý tiệm cầm đồ
+
+rectangle "HỆ THỐNG\nQUẢN LÝ TIỆM CẦM ĐỒ" as System {
+  rectangle "Quản lý khách hàng" as B1
+  rectangle "Quản lý tài sản\ncầm cố" as B2
+  rectangle "Quản lý phiếu cầm đồ" as B3
+  rectangle "Quản lý thu lãi,\n gia hạn, tất toán" as B4
+  rectangle "Quản lý báo cáo\nvà thống kê" as B5
+  rectangle "Quản lý nhân viên\nvà phân quyền" as B6
+}
+
+@enduml
+

@@ -1,0 +1,194 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Chi tiết phiếu cầm | Pawnshop{% endblock %}
+
+{% block content %}
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Phiếu {{ tx.ticket_no }}</h1>
+        <p class="text-sm text-slate-500">Thông tin chi tiết giao dịch cầm đồ.</p>
+      </div>
+      <div class="flex flex-wrap gap-2 justify-end">
+        {% if tx.status in ['active', 'extended'] %}
+          <div class="inline-flex rounded-lg bg-white border border-slate-200 shadow-sm overflow-hidden">
+            <form method="post" action="{{ url_for('transactions.pay_interest', transaction_id=tx.id) }}">
+              <button type="submit" class="px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                Thu lãi tiền mặt
+              </button>
+            </form>
+            <a href="{{ url_for('transactions.qr_interest', transaction_id=tx.id) }}" class="px-4 py-2 text-sm text-emerald-700 hover:bg-emerald-50 border-l border-slate-200">
+              QR thanh toán lãi
+            </a>
+          </div>
+          <div class="relative" data-extend-wrapper>
+            <button type="button" class="px-4 py-2 text-sm rounded-lg border border-amber-200 text-amber-700 hover:bg-amber-50" data-extend-toggle>
+              Gia hạn
+            </button>
+            <form method="post" action="{{ url_for('transactions.extend', transaction_id=tx.id) }}" class="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-lg shadow-lg p-3 text-sm hidden" data-extend-panel>
+              <label class="block text-slate-700 mb-1">Số ngày gia hạn</label>
+              <input type="number" name="extension_days" value="30" min="1" class="w-full rounded-lg border-slate-200 text-sm focus:ring-amber-500 focus:border-amber-500 mb-3">
+              <div class="flex justify-end gap-2">
+                <button type="button" class="px-3 py-1.5 text-xs rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50" data-extend-cancel>
+                  Hủy
+                </button>
+                <button type="submit" class="px-3 py-1.5 text-xs rounded-lg bg-amber-500 text-white hover:bg-amber-600">
+                  Xác nhận
+                </button>
+              </div>
+            </form>
+          </div>
+        {% endif %}
+        {% if tx.status != 'redeemed' and tx.status != 'liquidated' %}
+          <form method="post" action="{{ url_for('transactions.redeem', transaction_id=tx.id) }}" onsubmit="return confirm('Xác nhận tất toán và chuộc đồ?');">
+            <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:bg-primary-dark">
+              Tất toán tiền mặt
+            </button>
+          </form>
+          <a href="{{ url_for('transactions.qr_redeem', transaction_id=tx.id) }}" class="px-4 py-2 text-sm rounded-lg border border-emerald-200 text-emerald-700 hover:bg-emerald-50">
+            QR tất toán
+          </a>
+        {% endif %}
+        <a href="{{ url_for('transactions.print_ticket', transaction_id=tx.id) }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50" target="_blank">
+          In phiếu cầm
+        </a>
+        {% if tx.status == 'redeemed' %}
+          <a href="{{ url_for('transactions.print_redeem', transaction_id=tx.id) }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50" target="_blank">
+            In phiếu chuộc
+          </a>
+        {% endif %}
+        <a href="{{ url_for('transactions.index') }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">
+          Danh sách phiếu
+        </a>
+      </div>
+    </div>
+
+  <div class="grid gap-6 md:grid-cols-[2fr,1fr]">
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <dt class="text-slate-500">Khách hàng</dt>
+          <dd class="font-medium text-slate-900">
+            {{ tx.customer.full_name if tx.customer else "-" }}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Người mang tài sản</dt>
+          <dd class="font-medium text-slate-900">
+            {% if tx.brought_name %}
+              {{ tx.brought_name }}{% if tx.brought_id_card %} ({{ tx.brought_id_card }}){% endif %}
+            {% else %}
+              Trùng với khách hàng
+            {% endif %}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Số tiền cầm</dt>
+          <dd class="font-medium text-slate-900">
+            {{ format_currency(tx.pawn_value) }}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Tài sản</dt>
+          <dd class="font-medium text-slate-900">
+            {{ tx.item.name if tx.item else "-" }}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">% lãi/tháng</dt>
+          <dd class="font-medium text-slate-900">
+            {{ tx.interest_rate }}%
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Ngày cầm</dt>
+          <dd class="font-medium text-slate-900">
+            {{ format_date(tx.pawn_date) }}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Hạn chuộc</dt>
+          <dd class="font-medium text-slate-900">
+            {{ format_date(tx.due_date) }}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Trạng thái</dt>
+          <dd>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ status_badge_class(tx.status) }}">
+              {{ status_label(tx.status) }}
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Nhân viên tạo</dt>
+          <dd class="font-medium text-slate-900">
+            {{ tx.staff.full_name if tx.staff else "-" }}
+          </dd>
+        </div>
+      </dl>
+      <div class="mt-4">
+        <dt class="text-sm text-slate-500 mb-1">Ghi chú</dt>
+        <dd class="text-sm text-slate-800 whitespace-pre-line">{{ tx.notes or "-" }}</dd>
+      </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+      <h2 class="text-sm font-semibold text-slate-900 mb-4">Tính lãi đến hôm nay</h2>
+      <dl class="space-y-2 text-sm">
+        <div class="flex justify-between">
+          <dt class="text-slate-500">Số ngày</dt>
+          <dd class="font-medium text-slate-900">{{ interest_info.days }}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-slate-500">Tiền lãi</dt>
+          <dd class="font-medium text-slate-900">{{ format_currency(interest_info.interest) }}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-slate-500">Tổng phải trả</dt>
+          <dd class="font-semibold text-primary">{{ format_currency(interest_info.total) }}</dd>
+        </div>
+        <div class="mt-4 text-xs text-slate-500">
+          Lần cuối thu lãi / gia hạn tính từ: {{ format_date(last_interest_date) }}
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="mt-6 bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+    <h2 class="text-sm font-semibold text-slate-900 mb-3">Lịch sử thu tiền</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-3 py-2 text-left text-slate-500 font-medium">Ngày</th>
+            <th class="px-3 py-2 text-left text-slate-500 font-medium">Loại</th>
+            <th class="px-3 py-2 text-left text-slate-500 font-medium">Nhân viên</th>
+            <th class="px-3 py-2 text-right text-slate-500 font-medium">Số tiền</th>
+            <th class="px-3 py-2 text-left text-slate-500 font-medium">Ghi chú</th>
+            <th class="px-3 py-2 text-right text-slate-500 font-medium">Phiếu thu</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in payments %}
+            <tr class="border-t border-slate-100">
+              <td class="px-3 py-2 text-slate-700">{{ format_date(p.payment_date) }}</td>
+              <td class="px-3 py-2 text-slate-700">
+                {% if p.payment_type == 'interest' %}Thu lãi{% elif p.payment_type == 'extension' %}Gia hạn{% elif p.payment_type == 'redeem' %}Chuộc đồ{% else %}Khác{% endif %}
+              </td>
+              <td class="px-3 py-2 text-slate-700">{{ p.staff.full_name if p.staff else "-" }}</td>
+              <td class="px-3 py-2 text-right text-slate-900">{{ format_currency(p.amount) }}</td>
+              <td class="px-3 py-2 text-slate-600">{{ p.note or "" }}</td>
+              <td class="px-3 py-2 text-right">
+                <a href="{{ url_for('transactions.print_payment', transaction_id=tx.id, payment_id=p.id) }}" target="_blank" class="text-primary text-xs hover:underline">In phiếu</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" class="px-3 py-4 text-center text-sm text-slate-500">Chưa có thu tiền nào cho phiếu này.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

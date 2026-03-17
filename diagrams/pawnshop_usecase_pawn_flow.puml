@@ -1,0 +1,34 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor "Nhân viên giao dịch" as Staff
+
+rectangle "Quản lý phiếu cầm đồ" {
+  usecase "Lập phiếu cầm" as UC_Pawn
+  usecase "Thu lãi kỳ" as UC_Interest
+  usecase "Gia hạn phiếu" as UC_Extend
+  usecase "Tất toán / Chuộc đồ" as UC_Redeem
+  usecase "Thanh toán lãi\nqua QR" as UC_QRInterest
+  usecase "Thanh toán tất toán\nqua QR" as UC_QRRedeem
+  usecase "In phiếu cầm" as UC_PrintTicket
+  usecase "In phiếu chuộc" as UC_PrintRedeem
+}
+
+Staff --> UC_Pawn
+Staff --> UC_Interest
+Staff --> UC_Extend
+Staff --> UC_Redeem
+
+UC_Interest ..> UC_Pawn : <<include>>\nPhiếu đã được lập
+UC_Extend ..> UC_Interest : <<include>>\nThu lãi kỳ trước
+UC_Redeem ..> UC_Interest : <<include>>\nTính lãi còn lại
+
+UC_QRInterest ..|> UC_Interest : <<extend>>\nThanh toán bằng QR
+UC_QRRedeem ..|> UC_Redeem : <<extend>>\nThanh toán bằng QR
+
+UC_PrintTicket ..|> UC_Pawn : <<extend>>\nIn chứng từ cho khách
+UC_PrintRedeem ..|> UC_Redeem : <<extend>>\nIn chứng từ chuộc đồ
+
+@enduml
+

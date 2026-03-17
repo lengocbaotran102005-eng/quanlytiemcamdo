@@ -1,0 +1,41 @@
+@startuml
+title DFD mức 1 – Các tiến trình chính
+
+actor "Khách hàng" as KH
+actor "Quản lý tiệm" as QL
+actor "Nhân viên giao dịch" as NV
+
+database "DS Khách hàng" as D1
+database "DS Tài sản" as D2
+database "DS Phiếu cầm" as D3
+database "DS Thu tiền" as D4
+
+circle "1.0\nQuản lý khách hàng" as P1
+circle "2.0\nQuản lý tài sản" as P2
+circle "3.0\nQuản lý phiếu cầm" as P3
+circle "4.0\nQuản lý thu lãi,\n gia hạn, tất toán" as P4
+circle "5.0\nBáo cáo doanh thu" as P5
+
+KH --> P1 : Thông tin khách
+P1 --> D1 : Lưu / cập nhật\nkhách hàng
+P1 --> KH : Thông tin khách
+
+NV --> P2 : Thông tin tài sản
+P2 --> D2 : Lưu / cập nhật\n tài sản
+
+NV --> P3 : Lập phiếu cầm
+P3 --> D3 : Lưu phiếu cầm
+P3 --> NV : Phiếu cầm
+
+NV --> P4 : Thu lãi,\nGia hạn,\nTất toán
+P4 --> D4 : Lưu bản ghi thu tiền
+P4 --> D3 : Cập nhật\ntrạng thái phiếu
+P4 --> NV : Phiếu thu,\nThông tin thanh toán
+
+QL --> P5 : Yêu cầu báo cáo
+P5 --> D3 : Dữ liệu phiếu
+P5 --> D4 : Dữ liệu thu tiền
+P5 --> QL : Báo cáo doanh thu
+
+@enduml
+

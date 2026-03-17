@@ -1,0 +1,21 @@
+@startuml
+title DFD mức 0 – Hệ thống quản lý tiệm cầm đồ
+
+actor "Khách hàng" as KH
+actor "Quản lý tiệm" as QL
+actor "Nhân viên giao dịch" as NV
+
+rectangle "Hệ thống\nquản lý tiệm cầm đồ" as Sys {
+}
+
+KH --> Sys : Thông tin khách hàng,\nYêu cầu cầm đồ,\nThanh toán
+Sys --> KH : Phiếu cầm,\nPhiếu thu,\nPhiếu chuộc
+
+NV --> Sys : Lập phiếu,\nThu lãi,\nGia hạn,\nTất toán
+Sys --> NV : Thông tin phiếu,\nLịch sử thu tiền
+
+QL --> Sys : Cấu hình,\nYêu cầu báo cáo
+Sys --> QL : Báo cáo doanh thu,\nDanh sách phiếu quá hạn
+
+@enduml
+

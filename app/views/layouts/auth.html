@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}Đăng nhập{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-primary-dark via-primary to-slate-900 flex items-center justify-center">
+    <div class="w-full max-w-md px-4">
+      <div class="bg-white/95 backdrop-blur shadow-2xl rounded-2xl p-8 border border-slate-100">
+        <div class="flex items-center justify-center mb-6">
+          <div class="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mr-3 overflow-hidden border border-primary/20">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Quản lý tiệm cầm đồ" class="w-10 h-10">
+          </div>
+          <div>
+            <h1 class="text-xl font-semibold text-slate-900">Quản lý tiệm cầm đồ</h1>
+            <p class="text-xs text-slate-500">Hệ thống quản lý tiệm cầm đồ</p>
+          </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="space-y-2 mb-4">
+              {% for category, message in messages %}
+                {% set classes = {
+                  "success": "bg-emerald-50 text-emerald-800 border-emerald-200",
+                  "error": "bg-red-50 text-red-700 border-red-200",
+                  "warning": "bg-amber-50 text-amber-700 border-amber-200",
+                  "info": "bg-slate-50 text-slate-700 border-slate-200"
+                } %}
+                <div class="border px-4 py-2 rounded-lg text-sm {{ classes.get(category, 'bg-slate-50 text-slate-700 border-slate-200') }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </div>
+      <p class="mt-4 text-xs text-center text-slate-300">
+        Version 1.1.0 · Flask · TailwindCSS
+      </p>
+    </div>
+  </body>
+</html>

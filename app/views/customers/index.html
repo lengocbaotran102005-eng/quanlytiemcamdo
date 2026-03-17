@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Khách hàng | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900">Khách hàng</h1>
+      <p class="text-sm text-slate-500">Quản lý thông tin khách hàng cầm đồ.</p>
+    </div>
+    <a href="{{ url_for('customers.create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium shadow-sm hover:bg-primary-dark">
+      + Thêm khách hàng
+    </a>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-xl shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Họ tên</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">SĐT</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">CCCD/CMND</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Ghi chú</th>
+            <th class="px-4 py-2 text-right font-medium text-slate-500">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in customers %}
+            <tr class="border-t border-slate-100 hover:bg-slate-50">
+              <td class="px-4 py-2 text-slate-800 font-medium">
+                <a href="{{ url_for('customers.detail', customer_id=c.id) }}" class="text-primary hover:underline">
+                  {{ c.full_name }}
+                </a>
+              </td>
+              <td class="px-4 py-2 text-slate-700">{{ c.phone }}</td>
+              <td class="px-4 py-2 text-slate-700">{{ c.id_card or "-" }}</td>
+              <td class="px-4 py-2 text-slate-500">{{ c.note or "" }}</td>
+              <td class="px-4 py-2 text-right">
+                <a href="{{ url_for('customers.edit', customer_id=c.id) }}" class="text-primary text-xs hover:underline">Sửa</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">
+                Chưa có khách hàng nào.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+

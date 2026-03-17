@@ -1,0 +1,51 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE Customer {
+  +id : int
+  +full_name : varchar
+  +phone : varchar
+  +id_card : varchar
+  +address : varchar
+}
+
+RECTANGLE PawnItem {
+  +id : int
+  +name : varchar
+  +category : varchar
+  +estimated_value : decimal
+}
+
+RECTANGLE User {
+  +id : int
+  +username : varchar
+  +password_hash : varchar
+  +full_name : varchar
+  +role : enum
+}
+
+RECTANGLE Transaction {
+  +id : int
+  +ticket_no : varchar
+  +pawn_value : decimal
+  +interest_rate : decimal
+  +pawn_date : date
+  +due_date : date
+  +status : enum
+}
+
+RECTANGLE Payment {
+  +id : int
+  +amount : decimal
+  +payment_type : enum
+  +payment_date : date
+}
+
+Customer ||--o{ Transaction : "1..n"
+PawnItem ||--o{ Transaction : "1..n"
+User ||--o{ Transaction : "lập"
+Transaction ||--o{ Payment : "1..n"
+User ||--o{ Payment : "thu"
+
+@enduml
+

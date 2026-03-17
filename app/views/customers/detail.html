@@ -1,0 +1,88 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Chi tiết khách hàng | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900">{{ customer.full_name }}</h1>
+      <p class="text-sm text-slate-500">Lịch sử giao dịch cầm đồ.</p>
+    </div>
+    <a href="{{ url_for('customers.edit', customer_id=customer.id) }}" class="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:bg-primary-dark">
+      Sửa thông tin
+    </a>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-3 mb-6">
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:col-span-1">
+      <dl class="space-y-2 text-sm">
+        <div class="flex justify-between">
+          <dt class="text-slate-500">Số điện thoại</dt>
+          <dd class="font-medium text-slate-800">{{ customer.phone }}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-slate-500">CCCD/CMND</dt>
+          <dd class="font-medium text-slate-800">{{ customer.id_card or "-" }}</dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Địa chỉ</dt>
+          <dd class="font-medium text-slate-800">{{ customer.address or "-" }}</dd>
+        </div>
+        <div>
+          <dt class="text-slate-500">Ghi chú</dt>
+          <dd class="font-medium text-slate-800 whitespace-pre-line">{{ customer.note or "-" }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm md:col-span-2">
+      <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-slate-800">Lịch sử phiếu cầm</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-4 py-2 text-left font-medium text-slate-500">Mã phiếu</th>
+              <th class="px-4 py-2 text-left font-medium text-slate-500">Tài sản</th>
+              <th class="px-4 py-2 text-left font-medium text-slate-500">Số tiền</th>
+              <th class="px-4 py-2 text-left font-medium text-slate-500">Trạng thái</th>
+              <th class="px-4 py-2 text-right font-medium text-slate-500">Hạn chuộc</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in transactions %}
+              <tr class="border-t border-slate-100 hover:bg-slate-50">
+                <td class="px-4 py-2 text-slate-800 font-medium">
+                  <a href="{{ url_for('transactions.detail', transaction_id=t.id) }}" class="text-primary hover:underline">
+                    {{ t.ticket_no }}
+                  </a>
+                </td>
+                <td class="px-4 py-2 text-slate-700">
+                  {{ t.item.name if t.item else "-" }}
+                </td>
+                <td class="px-4 py-2 text-slate-900">
+                  {{ format_currency(t.pawn_value) }}
+                </td>
+                <td class="px-4 py-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ status_badge_class(t.status) }}">
+                    {{ status_label(t.status) }}
+                  </span>
+                </td>
+                <td class="px-4 py-2 text-right text-slate-600">
+                  {{ format_date(t.due_date) }}
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">
+                  Khách hàng chưa có giao dịch nào.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

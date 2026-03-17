@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor "Quản lý tiệm" as Admin
+actor "Nhân viên giao dịch" as Staff
+
+rectangle "Hệ thống quản lý\ntiệm cầm đồ" {
+  usecase "Đăng nhập\nhệ thống" as UC_Login
+  usecase "Quản lý khách hàng" as UC_Customers
+  usecase "Quản lý tài sản\ncầm cố" as UC_Items
+  usecase "Lập phiếu cầm đồ" as UC_Pawn
+  usecase "Thu lãi kỳ" as UC_Interest
+  usecase "Gia hạn phiếu" as UC_Extend
+  usecase "Tất toán / Chuộc đồ" as UC_Redeem
+  usecase "Quản lý nhân viên" as UC_Users
+  usecase "Báo cáo doanh thu" as UC_Reports
+}
+
+Admin --> UC_Login
+Staff --> UC_Login
+
+Staff --> UC_Customers
+Staff --> UC_Items
+Staff --> UC_Pawn
+Staff --> UC_Interest
+Staff --> UC_Extend
+Staff --> UC_Redeem
+
+Admin --> UC_Users
+Admin --> UC_Reports
+
+UC_Redeem ..> UC_Interest : <<include>>\nTính lãi còn lại
+UC_Extend ..> UC_Interest : <<include>>\nThu lãi kỳ trước
+
+@enduml
+

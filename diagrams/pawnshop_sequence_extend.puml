@@ -1,0 +1,22 @@
+@startuml
+actor "Nhân viên" as Staff
+participant "Giao diện Flask\n(Chi tiết phiếu)" as UI
+participant "Backend Flask" as API
+database "MySQL" as DB
+
+Staff -> UI : Nhấn "Gia hạn"
+UI -> API : GET /transactions/{id}
+API -> DB : SELECT transaction,\n payments WHERE id = {id}
+API --> UI : Thông tin phiếu\nvà số kỳ lãi đã thu
+
+Staff -> UI : Nhập số ngày gia hạn\nvà xác nhận
+UI -> API : POST /transactions/{id}/extend\n(extension_days)
+API -> DB : SELECT transaction,\n payments WHERE id = {id}
+API -> API : Tính lãi kỳ trước\nvà tổng ngày gia hạn
+API -> DB : INSERT INTO payments\n(type = extension,\n amount = interest_amount)
+API -> DB : UPDATE transactions\n(due_date, extension_count)
+API --> UI : 302 Redirect\n/transactions/{id}
+UI -> Staff : Hiển thị phiếu\nđã gia hạn
+
+@enduml
+

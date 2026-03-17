@@ -1,0 +1,12 @@
+@startuml
+title BFD mức 2 – Chức năng B3.2 Quản lý lịch sử thu lãi và gia hạn
+
+rectangle "B3.2 Quản lý lịch sử\nthu lãi và gia hạn" {
+  rectangle "B3.2.1 Tính lãi\nđến thời điểm hiện tại" as B321
+  rectangle "B3.2.2 Ghi nhận\nthu lãi kỳ" as B322
+  rectangle "B3.2.3 Ghi nhận\ngia hạn phiếu" as B323
+  rectangle "B3.2.4 Cập nhật\nngày tính lãi tiếp theo" as B324
+}
+
+@enduml
+

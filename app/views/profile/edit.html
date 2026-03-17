@@ -1,0 +1,34 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Sửa thông tin cá nhân | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-semibold text-slate-900 mb-4">Sửa thông tin cá nhân</h1>
+    <form method="post" class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-slate-700">Họ tên</label>
+        <input name="full_name" value="{{ current_user.full_name }}" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary" required>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Số điện thoại</label>
+          <input name="phone" value="{{ current_user.phone }}" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Email</label>
+          <input name="email" value="{{ current_user.email }}" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700">Giới thiệu</label>
+        <textarea name="bio" rows="3" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary">{{ current_user.bio }}</textarea>
+      </div>
+      <div class="flex justify-end gap-2">
+        <a href="{{ url_for('profile.index') }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Hủy</a>
+        <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:bg-primary-dark">Lưu</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+

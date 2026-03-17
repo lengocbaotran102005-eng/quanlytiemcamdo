@@ -1,0 +1,104 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Thông tin cá nhân | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="max-w-3xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Thông tin cá nhân</h1>
+        <p class="text-sm text-slate-500">Quản lý tài khoản đăng nhập của bạn.</p>
+      </div>
+      <a href="{{ url_for('profile.edit') }}" class="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:bg-primary-dark">
+        Sửa thông tin
+      </a>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-[220px,1fr]">
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col items-center">
+        <div class="w-24 h-24 rounded-full overflow-hidden bg-slate-100 mb-3">
+          {% if current_user.avatar_url %}
+            <img src="{{ current_user.avatar_url }}" alt="{{ current_user.full_name }}" class="w-full h-full object-cover">
+          {% else %}
+            <div class="w-full h-full flex items-center justify-center text-2xl font-semibold text-slate-400">
+              {{ current_user.full_name[:2] if current_user.full_name else "U" }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="text-center mb-4">
+          <div class="text-base font-semibold text-slate-900">{{ current_user.full_name }}</div>
+          <div class="text-xs text-slate-500 mt-1">
+            {% if current_user.role == 'admin' %}
+              🔴 Quản lý
+            {% else %}
+              🔵 Nhân viên
+            {% endif %}
+          </div>
+        </div>
+        <form method="post" action="{{ url_for('profile.upload_avatar') }}" enctype="multipart/form-data" class="w-full space-y-2">
+          <input type="file" name="avatar" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-primary file:text-white hover:file:bg-primary-dark">
+          <div class="flex gap-2 justify-center">
+            <button type="submit" class="px-3 py-1.5 text-xs rounded-lg bg-primary text-white hover:bg-primary-dark">
+              Đổi ảnh
+            </button>
+            {% if current_user.avatar_url %}
+              <form method="post" action="{{ url_for('profile.delete_avatar_route') }}">
+                <button type="submit" class="px-3 py-1.5 text-xs rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">
+                  Xóa
+                </button>
+              </form>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+          <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <dt class="text-slate-500">Họ tên</dt>
+              <dd class="font-medium text-slate-900">{{ current_user.full_name }}</dd>
+            </div>
+            <div>
+              <dt class="text-slate-500">Tên đăng nhập</dt>
+              <dd class="font-medium text-slate-900">{{ current_user.username }}</dd>
+            </div>
+            <div>
+              <dt class="text-slate-500">Số điện thoại</dt>
+              <dd class="font-medium text-slate-900">{{ current_user.phone or "-" }}</dd>
+            </div>
+            <div>
+              <dt class="text-slate-500">Email</dt>
+              <dd class="font-medium text-slate-900">{{ current_user.email or "-" }}</dd>
+            </div>
+            <div>
+              <dt class="text-slate-500">Ngày tạo</dt>
+              <dd class="font-medium text-slate-900">{{ format_date(current_user.created_at) if current_user.created_at else "-" }}</dd>
+            </div>
+            <div>
+              <dt class="text-slate-500">Đăng nhập lần cuối</dt>
+              <dd class="font-medium text-slate-900">{{ format_date(current_user.last_login) if current_user.last_login else "-" }}</dd>
+            </div>
+          </dl>
+          <div class="mt-4">
+            <dt class="text-sm text-slate-500 mb-1">Giới thiệu</dt>
+            <dd class="text-sm text-slate-800 whitespace-pre-line">{{ current_user.bio or "Chưa có mô tả." }}</dd>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-semibold text-slate-900">Bảo mật tài khoản</h2>
+            <p class="text-xs text-slate-500 mt-1">
+              Nên đổi mật khẩu định kỳ để tăng độ an toàn.
+            </p>
+          </div>
+          <a href="{{ url_for('profile.change_password') }}" class="px-4 py-2 text-xs font-medium rounded-lg bg-slate-900 text-white hover:bg-slate-800">
+            Đổi mật khẩu
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

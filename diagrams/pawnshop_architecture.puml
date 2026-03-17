@@ -1,0 +1,51 @@
+@startuml
+title Kiến trúc tổng thể hệ thống quản lý tiệm cầm đồ
+
+package "Trình duyệt Web" as Client {
+  component "Giao diện HTML\n+ TailwindCSS" as UI
+}
+
+package "Ứng dụng Flask" as App {
+  package "Views (Jinja2)" as Views {
+    component "layouts/base.html" as BaseTpl
+    component "transactions/*.html" as TxTpl
+    component "customers/*.html" as CusTpl
+    component "reports/index.html" as RepTpl
+  }
+
+  package "Controllers (Blueprints)" as Ctrls {
+    component "auth" as BP_Auth
+    component "dashboard" as BP_Dash
+    component "transactions" as BP_Tx
+    component "customers" as BP_Cus
+    component "items" as BP_Item
+    component "reports" as BP_Rep
+    component "users" as BP_User
+  }
+
+  package "Models & Services" as Models {
+    component "Models\n(Customer, PawnItem,\nTransaction, Payment, User)" as M_Models
+    component "Service tính lãi\ninterest.calc_interest" as S_Int
+    component "Service VietQR\nvietqr.build_qr_url" as S_QR
+  }
+}
+
+database "MySQL" as DB
+
+UI --> BP_Auth : HTTP request\n(login, logout)
+UI --> BP_Tx : HTTP request\n(phiếu cầm, thu lãi,\n gia hạn, tất toán)
+UI --> BP_Cus : HTTP request\n(khách hàng)
+UI --> BP_Rep : HTTP request\n(báo cáo)
+
+BP_Auth --> M_Models
+BP_Tx --> M_Models
+BP_Tx --> S_Int
+BP_Tx --> S_QR
+BP_Cus --> M_Models
+BP_Rep --> M_Models
+BP_User --> M_Models
+
+M_Models --> DB : Truy vấn / cập nhật
+
+@enduml
+

@@ -1,0 +1,17 @@
+@startuml
+actor "Nhân viên" as Staff
+participant "Giao diện Flask\n(Chi tiết phiếu)" as UI
+participant "Backend Flask" as API
+database "MySQL" as DB
+
+Staff -> UI : Nhấn "Tất toán / Chuộc đồ"
+UI -> API : POST /transactions/{id}/redeem
+API -> DB : SELECT transaction, payments\nWHERE id = {id}
+API -> API : Tính lãi còn lại\ntừ lần thu lãi/gia hạn gần nhất
+API -> DB : UPDATE transactions\nstatus = redeemed,\nredeem_amount = total,\nredeem_date = hôm nay
+API -> DB : INSERT INTO payments\n(type = redeem,\namount = total)
+API --> UI : 302 Redirect\n/transactions/{id}
+UI -> Staff : Hiển thị trạng thái "Đã chuộc"\nCập nhật lịch sử thu tiền
+
+@enduml
+

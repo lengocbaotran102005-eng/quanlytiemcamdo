@@ -1,0 +1,60 @@
+{% extends "layouts/print.html" %}
+
+{% block title %}Phiếu thu tiền {{ tx.ticket_no }}{% endblock %}
+
+{% block content %}
+  <div class="heading">
+    <h1>PHIẾU THU TIỀN</h1>
+    <p>Mã phiếu cầm: {{ tx.ticket_no }}</p>
+  </div>
+
+  <div class="row">
+    <div>Ngày thu: {{ format_date(payment.payment_date) }}</div>
+    <div>Loại thu:
+      {% if payment.payment_type == 'interest' %}Thu lãi{% elif payment.payment_type == 'extension' %}Gia hạn{% elif payment.payment_type == 'redeem' %}Chuộc đồ{% else %}Khác{% endif %}
+    </div>
+  </div>
+
+  <div class="section-title">Thông tin khách hàng</div>
+  <div class="row">
+    <div>Họ tên: <strong>{{ tx.customer.full_name }}</strong></div>
+    <div>SĐT: {{ tx.customer.phone }}</div>
+  </div>
+  <div class="row">
+    <div>CMND/CCCD: {{ tx.customer.id_card }}</div>
+  </div>
+
+  <div class="section-title">Nội dung thu</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Diễn giải</th>
+        <th>Số tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          {% if payment.note %}
+            {{ payment.note }}
+          {% else %}
+            Thu tiền cho phiếu {{ tx.ticket_no }}
+          {% endif %}
+        </td>
+        <td>{{ format_currency(payment.amount) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sign-row">
+    <div class="sign-box">
+      <div>Người thu tiền</div>
+      <div style="margin-top: 48px;">Ký, ghi rõ họ tên</div>
+    </div>
+    <div class="sign-box">
+      <div>Người nộp tiền</div>
+      <div style="margin-top: 48px;">Ký, ghi rõ họ tên</div>
+    </div>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Giao dịch | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900">Giao dịch</h1>
+      <p class="text-sm text-slate-500">Danh sách phiếu cầm đồ.</p>
+    </div>
+    <a href="{{ url_for('transactions.create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium shadow-sm hover:bg-primary-dark">
+      + Tạo phiếu cầm
+    </a>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-xl shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Mã phiếu</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Khách hàng</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Tài sản</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Số tiền</th>
+            <th class="px-4 py-2 text-left font-medium text-slate-500">Trạng thái</th>
+            <th class="px-4 py-2 text-right font-medium text-slate-500">Hạn chuộc</th>
+            <th class="px-4 py-2 text-right font-medium text-slate-500">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in transactions %}
+            <tr class="border-t border-slate-100 hover:bg-slate-50">
+              <td class="px-4 py-2 font-medium text-slate-800">
+                <a href="{{ url_for('transactions.detail', transaction_id=t.id) }}" class="text-primary hover:underline">
+                  {{ t.ticket_no }}
+                </a>
+              </td>
+              <td class="px-4 py-2 text-slate-700">
+                {{ t.customer.full_name if t.customer else "-" }}
+              </td>
+              <td class="px-4 py-2 text-slate-700">
+                {{ t.item.name if t.item else "-" }}
+              </td>
+              <td class="px-4 py-2 text-slate-900">
+                {{ format_currency(t.pawn_value) }}
+              </td>
+              <td class="px-4 py-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ status_badge_class(t.status) }}">
+                  {{ status_label(t.status) }}
+                </span>
+              </td>
+              <td class="px-4 py-2 text-right text-slate-600">
+                {{ format_date(t.due_date) }}
+              </td>
+              <td class="px-4 py-2 text-right text-xs">
+                <a href="{{ url_for('transactions.detail', transaction_id=t.id) }}" class="inline-flex items-center px-2.5 py-1 rounded-full border border-slate-200 text-slate-700 hover:bg-slate-50">
+                  Xử lý
+                </a>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="7" class="px-4 py-6 text-center text-sm text-slate-500">
+                Chưa có giao dịch nào.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

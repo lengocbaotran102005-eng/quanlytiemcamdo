@@ -1,0 +1,85 @@
+{% extends "layouts/print.html" %}
+
+{% block title %}Phiếu cầm đồ {{ tx.ticket_no }}{% endblock %}
+
+{% block content %}
+  <div class="heading">
+    <h1>PHIẾU CẦM ĐỒ</h1>
+    <p>Mã phiếu: {{ tx.ticket_no }}</p>
+  </div>
+
+  <div class="row">
+    <div>Ngày lập: {{ format_date(tx.pawn_date) }}</div>
+    <div>Hạn chuộc: {{ format_date(tx.due_date) }}</div>
+  </div>
+
+  <div class="section-title">Thông tin khách hàng</div>
+  <div class="row">
+    <div>Họ tên: <strong>{{ tx.customer.full_name }}</strong></div>
+    <div>SĐT: {{ tx.customer.phone }}</div>
+  </div>
+  <div class="row">
+    <div>CMND/CCCD: {{ tx.customer.id_card }}</div>
+  </div>
+  <div class="row">
+    <div>Địa chỉ: {{ tx.customer.address or "" }}</div>
+  </div>
+
+  <div class="section-title">Người mang tài sản</div>
+  <div class="row">
+    <div>Họ tên:
+      <strong>
+        {% if tx.brought_name %}
+          {{ tx.brought_name }}
+        {% else %}
+          {{ tx.customer.full_name }}
+        {% endif %}
+      </strong>
+    </div>
+    <div>CMND/CCCD:
+      {% if tx.brought_id_card %}
+        {{ tx.brought_id_card }}
+      {% else %}
+        {{ tx.customer.id_card }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="section-title">Thông tin tài sản</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Tài sản</th>
+        <th>Loại</th>
+        <th>Giá trị ước tính</th>
+        <th>Số tiền cầm</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ tx.item.name }}</td>
+        <td>{{ tx.item.category }}</td>
+        <td>{{ format_currency(tx.item.estimated_value) }}</td>
+        <td>{{ format_currency(tx.pawn_value) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Điều khoản</div>
+  <div style="font-size: 13px; line-height: 1.5;">
+    <p>Số tiền cho vay: <strong>{{ format_currency(tx.pawn_value) }}</strong>, lãi suất
+      <strong>{{ tx.interest_rate }}%/tháng</strong>, thời hạn cầm <strong>{{ tx.duration_days }} ngày</strong>.</p>
+    <p>Khách hàng đồng ý trả lãi đầy đủ hàng tháng theo quy định. Khi quá hạn, tiệm có quyền xử lý tài sản theo quy định pháp luật.</p>
+  </div>
+
+  <div class="sign-row">
+    <div class="sign-box">
+      <div>Người cầm đồ</div>
+      <div style="margin-top: 48px;">Ký, ghi rõ họ tên</div>
+    </div>
+    <div class="sign-box">
+      <div>Người cầm tài sản</div>
+      <div style="margin-top: 48px;">Ký, ghi rõ họ tên</div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+@startuml
+title DFD mức 2 – Tiến trình 3.0 Quản lý phiếu cầm
+
+actor "Nhân viên giao dịch" as NV
+database "DS Khách hàng" as D1
+database "DS Tài sản" as D2
+database "DS Phiếu cầm" as D3
+
+circle "3.1\nTiếp nhận yêu cầu\ncầm đồ" as P31
+circle "3.2\nLập phiếu cầm" as P32
+circle "3.3\nCập nhật thông tin\nphiếu cầm" as P33
+
+NV --> P31 : Thông tin khách,\nThông tin tài sản
+P31 --> D1 : Tra cứu / lưu\nkhách hàng
+P31 --> D2 : Tra cứu / lưu\n tài sản
+
+P31 --> P32 : Thông tin đã kiểm tra
+P32 --> D3 : Lưu phiếu cầm mới
+P32 --> NV : Mã phiếu,\nPhiếu cầm
+
+NV --> P33 : Yêu cầu sửa phiếu
+P33 --> D3 : Cập nhật\nphiếu cầm
+P33 --> NV : Thông tin phiếu\nđã cập nhật
+
+@enduml
+

@@ -1,0 +1,70 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Tạo phiếu cầm | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="max-w-3xl">
+    <h1 class="text-2xl font-semibold text-slate-900 mb-4">Tạo phiếu cầm</h1>
+    <form method="post" class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-4" data-interest-form>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Khách hàng</label>
+          <select name="customer_id" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary" required>
+            <option value="">Chọn khách hàng</option>
+            {% for c in customers %}
+              <option value="{{ c.id }}">{{ c.full_name }} - {{ c.phone }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Số tiền cầm (₫)</label>
+          <input name="pawn_value" data-interest-input class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary" required>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700">Tên tài sản</label>
+        <input name="item_name" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary" required>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Người mang tài sản đến</label>
+          <input name="brought_name" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary" placeholder="Họ tên người mang tài sản">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700">CMND/CCCD người mang</label>
+          <input name="brought_id_card" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary" placeholder="Nếu khác chủ sở hữu">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700">SĐT người mang (nếu có)</label>
+        <input name="brought_phone" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary">
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700">% lãi/tháng</label>
+          <input name="interest_rate" data-interest-input value="{{ config.DEFAULT_INTEREST_RATE if config.DEFAULT_INTEREST_RATE is defined else 3.0 }}" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Số ngày cầm</label>
+          <input name="duration_days" data-interest-input value="30" class="mt-1 block w-full rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Tiền lãi ước tính</label>
+          <div class="mt-1 text-lg font-semibold text-primary">
+            <span data-interest-output>0</span> ₫
+          </div>
+          <p class="text-xs text-slate-500 mt-1">
+            Tính theo số ngày và % lãi/tháng.
+          </p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2">
+        <a href="{{ url_for('transactions.index') }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Hủy</a>
+        <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:bg-primary-dark">Lưu phiếu</button>
+      </div>
+      <div class="mt-2 text-xs text-slate-500">
+        Tổng số tiền phải trả dự kiến: <span data-total-output>0</span> ₫
+      </div>
+    </form>
+  </div>
+{% endblock %}

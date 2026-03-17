@@ -1,0 +1,16 @@
+@startuml
+title Sơ đồ triển khai hệ thống quản lý tiệm cầm đồ
+
+node "Máy khách\n(Trình duyệt web)" as Client
+
+node "Máy chủ ứng dụng" as App {
+  component "Flask App\n(Quản lý tiệm cầm đồ)" as Flask
+}
+
+database "Máy chủ CSDL\nMySQL" as DB
+
+Client --> Flask : HTTP/HTTPS\n(Yêu cầu giao diện,\nnghiệp vụ)
+Flask --> DB : Kết nối MySQL\n(SQLAlchemy)
+
+@enduml
+

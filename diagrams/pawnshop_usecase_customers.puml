@@ -1,0 +1,21 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor "Nhân viên giao dịch" as Staff
+
+rectangle "Quản lý khách hàng" {
+  usecase "Thêm khách hàng mới" as UC_AddCustomer
+  usecase "Cập nhật thông tin\nkhách hàng" as UC_UpdateCustomer
+  usecase "Tra cứu khách hàng" as UC_SearchCustomer
+}
+
+Staff --> UC_AddCustomer
+Staff --> UC_UpdateCustomer
+Staff --> UC_SearchCustomer
+
+UC_UpdateCustomer ..> UC_AddCustomer : <<include>>\nKhách hàng đã tồn tại
+UC_SearchCustomer ..> UC_AddCustomer : <<include>>\nDữ liệu khách hàng
+
+@enduml
+

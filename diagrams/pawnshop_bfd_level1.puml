@@ -1,0 +1,11 @@
+@startuml
+title BFD mức 1 – Chức năng quản lý phiếu cầm đồ
+
+rectangle "B3. Quản lý phiếu cầm đồ" {
+  rectangle "B3.1 Quản lý thông tin phiếu cầm" as B31
+  rectangle "B3.2 Quản lý lịch sử\nthu lãi và gia hạn" as B32
+  rectangle "B3.3 Quản lý tất toán\nvà trạng thái phiếu" as B33
+}
+
+@enduml
+

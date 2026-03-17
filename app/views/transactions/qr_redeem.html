@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Thanh toán tất toán qua QR | Pawnshop{% endblock %}
+
+{% block content %}
+  <div class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-semibold text-slate-900 mb-2">Thanh toán tất toán qua QR</h1>
+    <p class="text-sm text-slate-500 mb-4">
+      Phiếu {{ tx.ticket_no }} – Khách hàng: {{ tx.customer.full_name if tx.customer else "-" }}
+    </p>
+
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-4">
+      <div class="text-sm">
+        <div class="flex justify-between mb-1">
+          <span class="text-slate-500">Tổng số tiền tất toán</span>
+          <span class="font-semibold text-slate-900">{{ format_currency(amount) }}</span>
+        </div>
+        <p class="text-xs text-slate-500">
+          Quét QR để khách hàng chuyển khoản đủ số tiền gốc + lãi còn lại.
+        </p>
+      </div>
+
+      <div class="flex justify-center">
+        <img src="{{ qr_url }}" alt="QR tất toán" class="rounded-lg border border-slate-200">
+      </div>
+
+      <form method="post" action="{{ url_for('transactions.redeem', transaction_id=tx.id) }}" class="flex justify-end gap-2">
+        <a href="{{ url_for('transactions.detail', transaction_id=tx.id) }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">
+          Quay lại phiếu
+        </a>
+        <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:bg-primary-dark">
+          Xác nhận đã nhận tiền
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
