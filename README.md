@@ -27,7 +27,8 @@
 ## 🌐 Demo online
 
 - Link: [http://103.56.163.84:5000/](http://103.56.163.84:5000/)
-
+- Tên đăng nhập: Admin
+- Mật khẩu: admin@123
 ---
 
 ## 🛠️ Công nghệ (Tech Stack)
